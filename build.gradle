@@ -1,0 +1,113 @@
+initMpsHomeAndVersion()
+
+group 'org.jetbrains.mps'
+version mpsVersion
+
+apply plugin: 'maven-publish'
+
+project.ext.distsDir = new File(project.buildDir, 'dists')
+
+// mps-maven-plugin depends on these libraries
+def MPS_LIBS = ['mps-behavior-api', 'mps-behavior-runtime', 'mps-closures', 'mps-collections', 'mps-core', 'mps-editor',
+                'mps-editor-api', 'mps-environment', 'mps-openapi', 'mps-platform', 'mps-tool', 'mps-tuples'] as String[]
+
+// Third-party libraries that MPS_LIBS depend on
+def EXT_LIBS = ['jdom', 'trove4j', 'platform', 'util', 'asm-all'] as String[]
+
+task(clean) {
+    delete project.buildDir
+}
+
+task(packageMpsLib, type: Jar) {
+    archiveName "mps-lib-${project.version}.lar"
+    destinationDir project.distsDir
+    from (new File(project.mpsHome, 'lib')) {
+        MPS_LIBS.collect({include it + '.jar'})
+    }
+}
+
+publishing {
+    publications {
+        mpsLib(MavenPublication) {
+            artifact source: packageMpsLib, extension: 'lar'
+            artifactId 'mps-lib'
+        }
+    }
+
+// Uncomment and modify this to publish the artifacts to your internal repository
+//    repositories {
+//        maven {
+//            url "https://myrepo"
+//            credentials {
+//                username = 'joe'
+//                password = 'secret'
+//            }
+//        }
+//    }
+}
+
+publishExtLibs EXT_LIBS
+publishMpsLibsIndividually MPS_LIBS
+
+publishMpsFolders 'languages/languageDesign', 'languages/baseLanguage', 'languages/make'
+
+private void publishMpsFolders(String... folders) {
+    folders.each { folder ->
+        def fullPath = new File(project.mpsHome, folder)
+        def lastSlash = folder.lastIndexOf('/')
+        def parentFolder = folder.substring(0, lastSlash)
+        def name = folder.substring(lastSlash + 1)
+        def folderNoSlash = folder.replace('/', '_')
+
+        def jarTask = task("packageFolder${folderNoSlash}", type: Jar) {
+            archiveName "${name}-${project.version}.jar"
+            destinationDir project.distsDir
+            from(fullPath) {
+                include '*.jar'
+            }
+        }
+
+        publishing.publications.create(folderNoSlash, MavenPublication) {
+            artifact source: jarTask, extension: 'lar'
+            artifactId name
+            groupId project.group + '.' + parentFolder.replace('/', '.')
+        }
+    }
+}
+
+private void publishMpsLibsIndividually(String... names) {
+    names.each { name ->
+        publishing.publications.create(name, MavenPublication) {
+            artifactId name
+            artifact new File(mpsHome, 'lib/' + name + '.jar')
+            artifact source: new File(mpsHome, 'lib/MPS-src.zip'), classifier: 'sources', extension: 'jar'
+        }
+    }
+}
+
+private void publishExtLibs(String... names) {
+    names.each { name ->
+        publishing.publications.create(name, MavenPublication) {
+            artifactId name
+            artifact new File(mpsHome, 'lib/' + name + '.jar')
+        }
+    }
+}
+
+private String initMpsHomeAndVersion() {
+    project.ext.mpsHome = System.getProperty('mpsHome')
+    if (!mpsHome) {
+        throw new GradleException("mpsHome property must be defined")
+    }
+
+    def versionFile = new File(mpsHome, 'build.number')
+
+    def versionLine = versionFile.readLines().find({ it.startsWith("build.number=MPS-") })
+    project.ext.mpsVersion = versionLine - "build.number=MPS-"
+    //project.ext.mpsVersion = '999.SNAPSHOT'
+    if (!mpsVersion) {
+        throw new GradleException("Could not read MPS version from ${versionFile}")
+    }
+
+    println "MPS version ${mpsVersion} in ${mpsHome}"
+}
