@@ -8,7 +8,7 @@ remote), in a format that can be used with [`mps-maven-plugin`](https://github.c
 2. Clone `maven-mps-deployer`.
 3. In the root directory of the project run the following command:
    ```sh
-   $ ./gradlew publishToMavenLocal -DmpsHome=<MPS installation directory>
+   ./gradlew publishToMavenLocal -DmpsHome=<MPS installation directory>
    ```
 
 Additionally, if you want to deploy MPS artifacts to a non-local Maven repository, follow these steps:
