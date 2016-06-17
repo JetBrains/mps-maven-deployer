@@ -9,7 +9,8 @@ project.ext.distsDir = new File(project.buildDir, 'dists')
 
 // mps-maven-plugin depends on these libraries
 def MPS_LIBS = ['mps-behavior-api', 'mps-behavior-runtime', 'mps-closures', 'mps-collections', 'mps-core', 'mps-editor',
-                'mps-editor-api', 'mps-environment', 'mps-openapi', 'mps-platform', 'mps-tool', 'mps-tuples'] as String[]
+                'mps-editor-api', 'mps-environment', 'mps-logging', 'mps-messaging', 'mps-openapi', 'mps-platform',
+                'mps-tool', 'mps-tuples'] as String[]
 
 // Third-party libraries that MPS_LIBS depend on
 def EXT_LIBS = ['jdom', 'trove4j', 'platform', 'util', 'asm-all'] as String[]
