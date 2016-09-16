@@ -76,7 +76,7 @@ private void initMpsHomeAndVersion() {
     def versionFile = new File(mpsHome, 'build.number')
 
     def versionLine = versionFile.readLines().find({ it.startsWith("build.number=") })
-    project.ext.mpsVersion = versionLine - "build.number="
+    project.ext.mpsVersion = versionLine - "build.number=" - "MPS-"
     if (!mpsVersion) {
         throw new GradleException("Could not read MPS version from ${versionFile}")
     }
