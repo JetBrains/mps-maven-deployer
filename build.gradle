@@ -13,7 +13,7 @@ def MPS_LIBS = ['mps-behavior-api', 'mps-behavior-runtime', 'mps-boot-util', 'mp
                 'mps-openapi', 'mps-platform', 'mps-tool', 'mps-tuples',
                 'asm-all', 'jdom', 'platform', 'trove4j', 'util'] as String[]
 
-// All jars from these directories are packaged into mps-modules:lar artifact
+// All jars from these directories are packaged into mps-modules:mar artifact
 def LANGUAGE_DIRS = ['languages/languageDesign', 'languages/baseLanguage',
                             'languages/baseLanguage/jetbrains.mps.baseLanguage.unitTest.libs', 'languages/make',
                             'languages/util'] as String[]
@@ -31,7 +31,7 @@ task(packageMpsLibsAsSingleJar, type: Jar) {
     }
 }
 
-task(packageMpsModulesAsLar, type: Jar) {
+task(packageMpsModulesAsMar, type: Jar) {
     archiveName "mps-modules-${project.version}.jar"
     destinationDir project.distsDir
 
@@ -48,7 +48,7 @@ publishing {
         }
 
         mpsModules(MavenPublication) {
-            artifact source: packageMpsModulesAsLar, extension: 'lar'
+            artifact source: packageMpsModulesAsMar, extension: 'mar'
             artifactId 'mps-modules'
         }
     }

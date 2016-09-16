@@ -33,7 +33,7 @@ you can find them under `$HOME/.m2/repository/org/jetbrains/mps` after deploymen
 1. MPS core libraries and third-party libraries installed with MPS that the plugin depends on to be able to run (from
    `$mpsHome/lib`) are all packaged together into `mps-libs.jar`, and `MPS-src.zip` is attached as the source JAR
    to the artifact.
-2. MPS languages and solutions are packaged into a module with `lar` extension (for Language ARchive).
+2. MPS languages and solutions are packaged into a module with `mar` extension (for Module ARchive).
 
 Some JARs are packaged into both artifacts since they are used by the plugin as plain Java libraries and also by MPS
 as modules (solutions).
