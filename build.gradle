@@ -58,13 +58,14 @@ if (hasProperty('repositoryUrl')) {
     publishing.repositories {
         maven {
             url repositoryUrl
-            if (hasProperty('repositoryUsername')) {
-                credentials {
-                    username = repositoryUsername
-                    password = repositoryPassword
-                }
-            }
         }
+    }
+}
+
+if (hasProperty('repositoryUsername')) {
+    publishing.repositories.maven.credentials {
+        username = repositoryUsername
+        password = repositoryPassword
     }
 }
 
