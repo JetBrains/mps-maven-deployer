@@ -23,7 +23,7 @@ task(clean) {
 }
 
 task(packageMpsLibsAsSingleJar, type: Jar) {
-    archiveName "mps-libs-${project.version}.jar"
+    archiveName "mps-libs.jar"
     destinationDir project.distsDir
 
     MPS_LIBS.each {
@@ -32,7 +32,7 @@ task(packageMpsLibsAsSingleJar, type: Jar) {
 }
 
 task(packageMpsModulesAsMar, type: Jar) {
-    archiveName "mps-modules-${project.version}.jar"
+    archiveName "mps-modules.mar"
     destinationDir project.distsDir
 
     LANGUAGE_DIRS.each({ from(mpsHome + '/' + it) { include '*.jar' } })
