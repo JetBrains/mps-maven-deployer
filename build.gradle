@@ -39,6 +39,15 @@ task(packageMpsModulesAsMar, type: Jar) {
     from(mpsHome + '/lib') { include 'mps-*.jar' }
 }
 
+task(packageMpsTesting, type: Jar) {
+    archiveName "mps-testing.mar"
+    destinationDir project.distsDir
+
+    from (fileTree("${mpsHome}/plugins/mps-testing").files) {
+        include '**/*.jar'
+    }
+}
+
 publishing {
     publications {
         mpsLibs(MavenPublication) {
@@ -50,6 +59,18 @@ publishing {
         mpsModules(MavenPublication) {
             artifact source: packageMpsModulesAsMar, extension: 'mar'
             artifactId 'mps-modules'
+        }
+
+        mpsTesting(MavenPublication) {
+            artifact source: packageMpsTesting, extension: 'mar'
+            artifactId 'mps-testing'
+            pom.withXml {
+                def dependency = asNode().appendNode('dependencies').appendNode('dependency')
+                dependency.appendNode('groupId', group)
+                dependency.appendNode('artifactId', 'mps-modules')
+                dependency.appendNode('version', version)
+                dependency.appendNode('type', 'mar')
+            }
         }
     }
 }
