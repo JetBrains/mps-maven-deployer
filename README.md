@@ -1,3 +1,4 @@
+[![JetBrains team project](http://jb.gg/badges/team-flat-square.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 # MPS Maven Deployer
 
 A Gradle script to automate the deployment of JetBrains MPS into a Maven repository (either local or remote).
