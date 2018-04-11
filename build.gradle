@@ -13,7 +13,7 @@ group 'org.jetbrains.mps'
 version mpsVersion
 
 task downloadMps(type: de.undercouch.gradle.tasks.download.Download) {
-    src "http://download.jetbrains.com/mps/${mpsMajor.replace(".", "")}/MPS-${mpsVersion}.zip"
+    src "http://download.jetbrains.com/mps/${mpsMajor}/MPS-${mpsVersion}.zip"
     dest "$buildDir/downloads/MPS-${mpsVersion}.zip"
     description "Downloads MPS ${mpsVersion}"
     overwrite false
