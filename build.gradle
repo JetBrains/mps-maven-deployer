@@ -3,6 +3,22 @@ plugins {
     id 'maven-publish'
     id 'de.undercouch.download' version '3.1.1'
 }
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://localhost:8081/artifactory/local-main/'
+        credentials {
+            username = "username"
+            password = "password"
+        }
+    }
+}
+configurations {
+    mpsLang {transitive = false}
+}
+dependencies {
+    mpsLang group: mpsLangGroupId, name: mpsLangArtifactId, version: mpsLangVersion, ext: mpsLangPackaging
+}
 
 // mps-driver depends on these libraries for compilation
 def MPS_LIBS = ['mps-core', 'mps-openapi', 'mps-tool']
@@ -27,11 +43,14 @@ task unpackMps(dependsOn: downloadMps) {
     doLast {
         copy {
             from zipTree(downloadMps.dest)
+            from zipTree(configurations.mpsLang.singleFile)
             into temporaryDir
         }
         delete mpsHome
         copy {
+            println "mpsLangArtifactId = $mpsLangArtifactId"
             from new File(temporaryDir, "MPS $mpsMajor")
+            from new File(temporaryDir, mpsLangArtifactId)
             into mpsHome
         }
     }
