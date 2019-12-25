@@ -5,7 +5,7 @@ plugins {
 }
 
 // mps-driver depends on these libraries for compilation
-def MPS_LIBS = ['mps-core', 'mps-openapi', 'mps-tool']
+def MPS_LIBS = ['mps-core', 'mps-openapi', 'ant/lib/ant-mps', 'mpsant/mps-tool', 'mps-annotations']
 
 initMpsHomeAndVersion()
 
