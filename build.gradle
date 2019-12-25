@@ -21,7 +21,7 @@ task downloadMps(type: de.undercouch.gradle.tasks.download.Download) {
 
 task unpackMps(dependsOn: downloadMps) {
     description "Extracts downloaded MPS to $mpsHome"
-    inputs.file downloadMps
+    inputs.file downloadMps.dest
     outputs.dir mpsHome
 
     doLast {
