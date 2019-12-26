@@ -4,10 +4,14 @@ plugins {
     id 'de.undercouch.download' version '3.1.1'
 }
 
-// mps-driver depends on these libraries for compilation
-def MPS_LIBS = ['mps-core', 'mps-openapi', 'ant/lib/ant-mps', 'mpsant/mps-tool', 'mps-annotations']
-
 initMpsHomeAndVersion()
+
+def old_packaging = (mpsYear < 2019 || mpsYear == 2019 && mpsReleaseNum == 1)
+
+// mps-driver depends on these libraries for compilation
+def MPS_LIBS = old_packaging ?
+    ['mps-core', 'mps-openapi', 'mps-tool']
+  : ['mps-core', 'mps-openapi', 'ant/lib/ant-mps', 'mpsant/mps-tool', 'mps-annotations']
 
 group 'org.jetbrains.mps'
 version mpsVersion
@@ -83,6 +87,12 @@ private void initMpsHomeAndVersion() {
         throw new GradleException("mpsVersion property must be defined")
     }
 
-    ext.mpsMajor = mpsVersion.find(/^\d+\.\d+/)
     ext.mpsHome = "$buildDir/MPS-$mpsVersion"
+
+    def regexp = /^(\d+)\.(\d+)/
+    def (mpsMajor, mpsYear, mpsReleaseNum) = (mpsVersion =~ regexp)[0]
+
+    ext.mpsMajor = mpsMajor
+    ext.mpsYear = mpsYear.toInteger()
+    ext.mpsReleaseNum = mpsReleaseNum.toInteger()
 }
